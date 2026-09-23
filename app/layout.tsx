@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "找搭子 · 出游计划匹配",
-  description: "通过时间、地点和出游计划，找到合适的出行搭子。",
+  title: "找搭子 V2 · 发现适合你的出游计划",
+  description: "通过偏好推荐、同行可信信息和出发确认，找到合适的出行搭子并真正成行。",
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",

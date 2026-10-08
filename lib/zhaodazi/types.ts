@@ -17,6 +17,8 @@ export type Intensity = "轻松" | "正常" | "特种兵";
 export type SocialStyle = "各玩各的" | "随缘聊天" | "热闹一点";
 export type PhotoStyle = "不太拍" | "随手拍" | "喜欢拍照";
 export type SpendingStyle = "省钱优先" | "正常消费" | "体验优先";
+export type TransportMode = "步行" | "自驾" | "地铁" | "打车" | "公交";
+export type BudgetLabel = "免费" | "50内" | "50-100" | "100+";
 export type ActivityStatus = "draft" | "recruiting" | "full" | "preparing" | "ongoing" | "completed" | "cancelled";
 export type ApplicationStatus = "pending" | "accepted" | "rejected" | "cancelled";
 export type ParticipantStatus = "joined" | "confirmed" | "withdrawn" | "completed";
@@ -86,6 +88,15 @@ export type Activity = {
   tags: string[];
   status: ActivityStatus;
   createdAt: string;
+  routeStops?: string[];
+  endDate?: string;
+  photos?: string[];
+  transport?: TransportMode;
+  budgetLabel?: BudgetLabel;
+  meetingPoint?: string;
+  notices?: string[];
+  extraNotes?: string;
+  flexibleDates?: boolean;
 };
 
 export type Application = {
@@ -129,7 +140,7 @@ export type Review = {
 };
 
 export type PrototypeState = {
-  schemaVersion: 3;
+  schemaVersion: 4;
   currentUserId: string;
   debugRole: Role;
   users: User[];
@@ -143,15 +154,16 @@ export type PrototypeState = {
 };
 
 export type PublishForm = {
-  locationId: LocationId;
-  when: string;
-  customDate: string;
-  category: ActivityCategory;
-  people: string;
-  intensity: Intensity;
-  socialStyle: SocialStyle | "";
-  photoStyle: PhotoStyle | "";
-  spendingStyle: SpendingStyle | "";
+  destinationIds: string[];
+  startDate: string;
+  endDate: string;
+  flexibleDates: boolean;
+  photos: string[];
   description: string;
+  transport: TransportMode | "";
+  budgetLabel: BudgetLabel | "";
+  meetingPoint: string;
+  notices: string[];
+  extraNotes: string;
   title: string;
 };

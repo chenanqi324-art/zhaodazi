@@ -26,16 +26,29 @@ function addBehavior(state: PrototypeState, activityId: string, behaviorType: Pr
   return [...state.behaviors, { id: id("behavior"), userId, activityId, behaviorType, createdAt: now() }];
 }
 
-function dateForChoice(choice: string, customDate: string) {
-  if (choice === "自定义") return customDate;
-  const date = new Date();
-  date.setHours(12, 0, 0, 0);
-  if (choice === "明天") date.setDate(date.getDate() + 1);
-  if (choice === "本周末") {
-    const daysUntilSaturday = (6 - date.getDay() + 7) % 7;
-    date.setDate(date.getDate() + daysUntilSaturday);
+const publishDestinationMap: Record<string, { name: string; locationId: Activity["locationId"] }> = {
+  "starry-bookstore": { name: "星寰书屋", locationId: "futian" },
+  "nantou-old-town": { name: "南头古城", locationId: "shenzhen-bay" },
+  "shenzhen-bay-park": { name: "深圳湾公园", locationId: "shenzhen-bay" },
+  wutong: { name: "梧桐山", locationId: "wutong" },
+  dapeng: { name: "大鹏海边", locationId: "dapeng" },
+};
+
+function formatDateRange(start: string, end: string) {
+  if (start.slice(0, 4) !== end.slice(0, 4)) {
+    return `${Number(start.slice(0, 4))}年${Number(start.slice(5, 7))}月${Number(start.slice(8, 10))}日–${Number(end.slice(0, 4))}年${Number(end.slice(5, 7))}月${Number(end.slice(8, 10))}日`;
   }
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  const startLabel = `${Number(start.slice(5, 7))}月${Number(start.slice(8, 10))}日`;
+  if (start === end) return startLabel;
+  return `${startLabel}–${Number(end.slice(5, 7))}月${Number(end.slice(8, 10))}日`;
+}
+
+function budgetRange(label: PublishForm["budgetLabel"]): [number, number] {
+  if (label === "免费") return [0, 0];
+  if (label === "50内") return [0, 50];
+  if (label === "50-100") return [50, 100];
+  if (label === "100+") return [100, 300];
+  return [0, 100];
 }
 
 export function prototypeReducer(state: PrototypeState, action: Action): PrototypeState {
@@ -141,29 +154,38 @@ export function prototypeReducer(state: PrototypeState, action: Action): Prototy
   if (action.type === "CLEAR_BEHAVIORS") return { ...state, behaviors: state.behaviors.filter((item) => item.userId !== state.currentUserId) };
 
   if (action.type === "PUBLISH_ACTIVITY") {
-    const location = state.locations.find((item) => item.id === action.form.locationId)!;
+    const destinations = action.form.destinationIds.map((destinationId) => publishDestinationMap[destinationId]).filter(Boolean);
+    const locationId = destinations[0]?.locationId ?? "futian";
+    const [budgetMin, budgetMax] = budgetRange(action.form.budgetLabel);
     const activityId = id("created");
     const activity: Activity = {
       id: activityId,
       title: action.form.title.trim(),
-      locationId: action.form.locationId,
-      date: dateForChoice(action.form.when, action.form.customDate),
-      dateLabel: action.form.when === "自定义" ? action.form.customDate : action.form.when === "本周末" ? "本周六" : action.form.when,
-      startTime: "14:00",
-      endTime: "20:00",
-      category: action.form.category,
-      intensity: action.form.intensity,
-      socialStyle: action.form.socialStyle || undefined,
-      photoStyle: action.form.photoStyle || undefined,
-      spendingStyle: action.form.spendingStyle || undefined,
-      budgetMin: 0,
-      budgetMax: 100,
-      capacity: 1 + Number(action.form.people.replace("+", "")),
+      locationId,
+      date: action.form.startDate,
+      dateLabel: formatDateRange(action.form.startDate, action.form.endDate),
+      startTime: "09:00",
+      endTime: action.form.startDate === action.form.endDate ? "18:00" : "最后一天",
+      category: destinations.length > 1 ? "短途旅行" : locationId === "wutong" ? "徒步" : locationId === "dapeng" ? "海边" : "Citywalk",
+      intensity: "轻松",
+      photoStyle: "喜欢拍照",
+      budgetMin,
+      budgetMax,
+      capacity: 4,
       organizerId: state.currentUserId,
       description: action.form.description.trim(),
-      tags: [action.form.category, action.form.socialStyle, action.form.photoStyle].filter(Boolean) as string[],
+      tags: [...destinations.map((item) => item.name), ...action.form.notices, action.form.transport, action.form.budgetLabel].filter(Boolean) as string[],
       status: "recruiting",
       createdAt: now(),
+      routeStops: destinations.map((item) => item.name),
+      endDate: action.form.endDate,
+      photos: action.form.photos,
+      transport: action.form.transport || undefined,
+      budgetLabel: action.form.budgetLabel || undefined,
+      meetingPoint: action.form.meetingPoint.trim() || undefined,
+      notices: action.form.notices,
+      extraNotes: action.form.extraNotes.trim() || undefined,
+      flexibleDates: action.form.flexibleDates,
     };
     return {
       ...state,

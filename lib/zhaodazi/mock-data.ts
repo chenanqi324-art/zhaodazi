@@ -12,7 +12,7 @@ export const locations: Location[] = [
 ];
 
 const users: User[] = [
-  { id: CURRENT_USER_ID, name: "小安", avatar: "安", tone: "pink", age: 24, city: "深圳", verifiedWechat: true, verifiedPhone: true, verifiedIdentity: false, joinedCount: 6, organizedCount: 0, completedCount: 5, fulfillmentRate: 100, recentCancellationCount: 0, commonCategories: ["徒步", "海边", "Citywalk"], preferredIntensity: "正常", preferredSocialStyle: "随缘聊天", impressionTags: ["准时", "好沟通", "会拍照"] },
+  { id: CURRENT_USER_ID, name: "小安", avatar: "安", tone: "pink", age: 24, city: "深圳", verifiedWechat: true, verifiedPhone: true, verifiedIdentity: false, joinedCount: 6, organizedCount: 1, completedCount: 5, fulfillmentRate: 100, recentCancellationCount: 0, commonCategories: ["徒步", "海边", "Citywalk"], preferredIntensity: "正常", preferredSocialStyle: "随缘聊天", impressionTags: ["准时", "好沟通", "会拍照"] },
   { id: ORGANIZER_USER_ID, name: "小宇", avatar: "宇", tone: "blue", age: 27, city: "深圳", verifiedWechat: true, verifiedPhone: true, verifiedIdentity: true, joinedCount: 8, organizedCount: 3, completedCount: 7, fulfillmentRate: 94, recentCancellationCount: 1, commonCategories: ["徒步", "海边", "骑行"], preferredIntensity: "正常", preferredSocialStyle: "随缘聊天", impressionTags: ["准时", "好沟通", "行程靠谱"] },
   { id: "lin", name: "阿林", avatar: "林", tone: "green", age: 26, city: "深圳", verifiedWechat: true, verifiedPhone: true, verifiedIdentity: true, joinedCount: 10, organizedCount: 1, completedCount: 9, fulfillmentRate: 96, recentCancellationCount: 0, commonCategories: ["徒步", "露营"], preferredIntensity: "正常", preferredSocialStyle: "随缘聊天", impressionTags: ["好相处", "行程靠谱"] },
   { id: "cheng", name: "阿诚", avatar: "诚", tone: "green", age: 27, city: "深圳", verifiedWechat: true, verifiedPhone: true, verifiedIdentity: false, joinedCount: 12, organizedCount: 0, completedCount: 11, fulfillmentRate: 92, recentCancellationCount: 1, commonCategories: ["徒步", "骑行"], preferredIntensity: "正常", preferredSocialStyle: "热闹一点", impressionTags: ["准时", "会照顾人"] },
@@ -32,6 +32,7 @@ const baseActivities: Omit<Activity, "createdAt">[] = [
   { id: "futian-exhibition", title: "当代艺术展看展搭子", locationId: "futian", date: "2026-09-27", dateLabel: "本周日", startTime: "14:00", endTime: "17:00", category: "看展", intensity: "轻松", socialStyle: "各玩各的", photoStyle: "不太拍", spendingStyle: "正常消费", budgetMin: 80, budgetMax: 120, capacity: 3, organizerId: "lin", description: "不需要一直聊天，看完可以一起吃饭交流。", tags: ["艺术", "安静", "室内"], status: "recruiting" },
   { id: "bay-nightwalk", title: "工作日晚深圳湾散步", locationId: "shenzhen-bay", date: "2026-09-25", dateLabel: "周五", startTime: "19:30", endTime: "21:30", category: "Citywalk", intensity: "轻松", socialStyle: "随缘聊天", photoStyle: "随手拍", spendingStyle: "省钱优先", budgetMin: 0, budgetMax: 30, capacity: 4, organizerId: ORGANIZER_USER_ID, description: "下班后吹吹海风，走累了就结束。", tags: ["夜景", "下班后", "轻松"], status: "preparing" },
   { id: "dapeng-coast-hike", title: "大鹏海岸线轻徒步", locationId: "dapeng", date: "2026-10-01", dateLabel: "国庆假期", startTime: "09:00", endTime: "17:30", category: "短途旅行", intensity: "正常", socialStyle: "热闹一点", photoStyle: "喜欢拍照", spendingStyle: "体验优先", budgetMin: 180, budgetMax: 280, capacity: 6, organizerId: "cheng", description: "海岸线徒步加看海，一天往返。", tags: ["海岸线", "假期", "一天往返"], status: "recruiting" },
+  { id: "dapeng-daytrip-hosted", title: "大鹏一日游", locationId: "dapeng", date: "2026-10-03", dateLabel: "国庆假期", startTime: "08:30", endTime: "19:00", category: "短途旅行", intensity: "轻松", socialStyle: "随缘聊天", photoStyle: "喜欢拍照", spendingStyle: "正常消费", budgetMin: 120, budgetMax: 220, capacity: 3, organizerId: CURRENT_USER_ID, description: "去海边慢慢玩一天，看看日落再返程。", tags: ["海边", "一日游", "拍照"], status: "recruiting" },
   { id: "wutong-fast", title: "梧桐山速登挑战", locationId: "wutong", date: "2026-09-27", dateLabel: "本周日", startTime: "06:30", endTime: "11:00", category: "徒步", intensity: "特种兵", socialStyle: "各玩各的", photoStyle: "不太拍", spendingStyle: "省钱优先", budgetMin: 20, budgetMax: 50, capacity: 4, organizerId: "cheng", description: "有一定体能基础再来，按计划快速登顶。", tags: ["速登", "体能局"], status: "recruiting" },
 ];
 
@@ -52,11 +53,13 @@ const participants: Participant[] = [
 const applications: Application[] = [
   { id: "app-cheng", activityId: "wutong-sunset", userId: "cheng", quickMessages: ["之前参加过类似活动"], message: "周末有空，平时经常徒步。", status: "pending", createdAt: "2026-09-22T10:00:00+08:00" },
   { id: "app-demo-preparing", activityId: "bay-nightwalk", userId: CURRENT_USER_ID, quickMessages: ["时间刚好合适"], message: "下班后可以直接过去。", status: "accepted", createdAt: "2026-09-21T10:00:00+08:00", handledAt: "2026-09-21T12:00:00+08:00" },
+  { id: "app-dapeng-jiajia", activityId: "dapeng-daytrip-hosted", userId: "jiajia", quickMessages: ["我也很想去"], message: "喜欢海边和拍照，时间也合适。", status: "pending", createdAt: "2026-09-23T15:00:00+08:00" },
+  { id: "app-dapeng-bei", activityId: "dapeng-daytrip-hosted", userId: "bei", quickMessages: ["时间刚好合适"], message: "国庆有空，可以一起出发。", status: "pending", createdAt: "2026-09-23T16:00:00+08:00" },
 ];
 
 export function createInitialState(): PrototypeState {
   return {
-    schemaVersion: 3,
+    schemaVersion: 4,
     currentUserId: CURRENT_USER_ID,
     debugRole: "participant",
     users: structuredClone(users),
@@ -72,6 +75,8 @@ export function createInitialState(): PrototypeState {
       { id: "behavior-1", userId: CURRENT_USER_ID, activityId: "wutong-morning", behaviorType: "view", createdAt: "2026-09-22T12:00:00+08:00" },
       { id: "behavior-2", userId: CURRENT_USER_ID, activityId: "dapeng-seaside", behaviorType: "favorite", createdAt: "2026-09-22T14:00:00+08:00" },
       { id: "behavior-3", userId: CURRENT_USER_ID, activityId: "bay-nightwalk", behaviorType: "join", createdAt: "2026-09-21T12:00:00+08:00" },
+      { id: "behavior-4", userId: CURRENT_USER_ID, activityId: "wutong-morning", behaviorType: "favorite", createdAt: "2026-09-22T15:00:00+08:00" },
+      { id: "behavior-5", userId: CURRENT_USER_ID, activityId: "shuangyue-camp", behaviorType: "favorite", createdAt: "2026-09-22T16:00:00+08:00" },
     ],
     reviews: [],
   };
